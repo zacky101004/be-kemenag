@@ -34,6 +34,26 @@ class MasterDataController extends Controller
         return response()->json($madrasah);
     }
 
+    public function showMyMadrasah(Request $request)
+    {
+        $id_madrasah = $request->user()->id_madrasah;
+        if (!$id_madrasah) {
+            return response()->json(['message' => 'User does not have an assigned madrasah'], 404);
+        }
+        return response()->json(Madrasah::findOrFail($id_madrasah));
+    }
+
+    public function updateMyMadrasah(Request $request)
+    {
+        $id_madrasah = $request->user()->id_madrasah;
+        if (!$id_madrasah) {
+            return response()->json(['message' => 'User does not have an assigned madrasah'], 404);
+        }
+        $madrasah = Madrasah::findOrFail($id_madrasah);
+        $madrasah->update($request->all());
+        return response()->json($madrasah);
+    }
+
     // === USERS ===
     public function indexUsers()
     {

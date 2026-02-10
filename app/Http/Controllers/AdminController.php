@@ -15,9 +15,17 @@ class AdminController extends Controller
     {
         // Summary Stats
         $stats = [
-            'total_submitted' => LaporanBulanan::where('status_laporan', 'submitted')->count(),
-            'total_verified' => LaporanBulanan::where('status_laporan', 'verified')->count(),
-            'total_revisi' => LaporanBulanan::where('status_laporan', 'revisi')->count(),
+            'total_madrasah' => \App\Models\Madrasah::count(),
+            'laporan_masuk' => LaporanBulanan::whereIn('status_laporan', ['submitted', 'verified', 'revisi'])->count(),
+            'terverifikasi' => LaporanBulanan::where('status_laporan', 'verified')->count(),
+            'perlu_revisi' => LaporanBulanan::where('status_laporan', 'revisi')->count(),
+            'recent_submissions' => LaporanBulanan::with('madrasah')
+                ->where('status_laporan', '!=', 'draft')
+                ->orderBy('updated_at', 'desc')
+                ->limit(5)
+                ->get(),
+            // Kecamatan progress akan ditampilkan setelah ada kolom kecamatan di tabel madrasah
+            'kecamatan_progress' => []
         ];
 
         return response()->json($stats);
@@ -61,22 +69,14 @@ class AdminController extends Controller
     // Rekapitulasi Data (For Excel Export)
     public function recap(Request $request)
     {
-        // Example: Get total siswa per madrasah for a specific month
+        // Get all submitted/verified reports for preview
         $bulan = $request->input('bulan', date('Y-m-d')); // Month Needed
 
-        $data = LaporanBulanan::whereYear('bulan_tahun', date('Y', strtotime($bulan)))
-            ->whereMonth('bulan_tahun', date('m', strtotime($bulan)))
-            ->where('status_laporan', 'verified')
-            ->with(['madrasah', 'siswa', 'guru']) // Eager load
-            ->get()
-            ->map(function($lap) {
-                return [
-                    'nama_madrasah' => $lap->madrasah->nama_madrasah,
-                    'total_siswa' => $lap->siswa->sum('jumlah_lk') + $lap->siswa->sum('jumlah_pr'),
-                    'total_guru' => $lap->guru->count(),
-                    // Add more complex aggregations here
-                ];
-            });
+        // For preview: show all non-draft reports
+        $data = LaporanBulanan::with(['madrasah', 'siswa', 'guru'])
+            ->whereIn('status_laporan', ['submitted', 'verified', 'revisi'])
+            ->orderBy('updated_at', 'desc')
+            ->get();
 
         return response()->json($data);
     }

@@ -19,8 +19,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // === ROLE: OPERATOR SEKOLAH ===
     Route::middleware(CheckRole::class.':operator_sekolah')->group(function () {
         Route::get('/operator/dashboard', [LaporanController::class, 'index']); // Dashboard List
-        Route::get('/laporan/{id}', [LaporanController::class, 'show']); // Detail Report
-        Route::post('/laporan', [LaporanController::class, 'store']); // Create Draft
+        Route::get('/laporan/{id}', [LaporanController::class, 'show']); //ail Det Report
+        Route::post('/laporan', [LaporanController::class, 'store']); 
         
         // Data Updates
         Route::put('/laporan/{id}/siswa', [LaporanController::class, 'updateSiswa']);
@@ -31,6 +31,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/laporan/{id}/keuangan', [LaporanController::class, 'updateKeuangan']);
         
         Route::post('/laporan/{id}/submit', [LaporanController::class, 'submit']);
+        
+        // Profile/Madrasah Management
+        Route::get('/operator/madrasah', [MasterDataController::class, 'showMyMadrasah']);
+        Route::put('/operator/madrasah', [MasterDataController::class, 'updateMyMadrasah']);
         
         // Pengumuman Read
         Route::get('/pengumuman', [MasterDataController::class, 'indexPengumuman']);

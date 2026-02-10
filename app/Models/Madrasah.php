@@ -14,8 +14,25 @@ class Madrasah extends Model
 
     protected $fillable = [
         'npsn',
+        'nsm',
         'nama_madrasah',
+        'no_piagam',
         'alamat',
+        'kecamatan',
+        'status_madrasah',
+        'akreditasi',
+        'tahun_berdiri',
+        'kode_satker',
+        'jalan',
+        'desa',
+        'kabupaten',
+        'provinsi',
+        'telp_kepala',
+        'email_madrasah',
+        'latitude',
+        'longitude',
+        'nama_kepala',
+        'nip_kepala',
         'status_aktif'
     ];
 
