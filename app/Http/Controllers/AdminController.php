@@ -14,22 +14,16 @@ class AdminController extends Controller
     public function dashboard(Request $request) 
     {
         $user = $request->user();
-        $statusMasuk = ['submitted', 'verified', 'revisi'];
-        
-        if ($user && $user->role === 'staff_penmad') {
-            $statusMasuk = ['submitted', 'verified'];
-        }
-
         // Summary Stats (Exclude deleted records)
         $stats = [
             'total_madrasah' => \App\Models\Madrasah::count(),
-            'laporan_masuk' => LaporanBulanan::whereIn('status_laporan', $statusMasuk)
+            'laporan_masuk' => LaporanBulanan::where('status_laporan', 'submitted')
                 ->whereNull('deleted_at_admin')
                 ->count(),
             'terverifikasi' => LaporanBulanan::where('status_laporan', 'verified')
                 ->whereNull('deleted_at_admin')
                 ->count(),
-            'perlu_revisi' => ($user && $user->role === 'staff_penmad') ? 0 : LaporanBulanan::where('status_laporan', 'revisi')
+            'perlu_revisi' => LaporanBulanan::where('status_laporan', 'revisi')
                 ->whereNull('deleted_at_admin')
                 ->count(),
             'recent_submissions' => LaporanBulanan::with('madrasah')
