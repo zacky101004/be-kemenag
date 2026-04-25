@@ -135,6 +135,11 @@ class LaporanController extends Controller
         DB::transaction(function () use ($laporan, $data) {
             $laporan->siswa()->delete();
             foreach ($data as $row) {
+                $row['jumlah_rombel'] = $row['jumlah_rombel'] ?? 0;
+                $row['jumlah_lk'] = $row['jumlah_lk'] ?? 0;
+                $row['jumlah_pr'] = $row['jumlah_pr'] ?? 0;
+                $row['mutasi_masuk'] = $row['mutasi_masuk'] ?? 0;
+                $row['mutasi_keluar'] = $row['mutasi_keluar'] ?? 0;
                 $laporan->siswa()->create($row);
             }
         });
@@ -152,6 +157,10 @@ class LaporanController extends Controller
         DB::transaction(function () use ($laporan, $data) {
             $laporan->rekap_personal()->delete();
             foreach ($data as $row) {
+                $row['jumlah_lk'] = $row['jumlah_lk'] ?? 0;
+                $row['jumlah_pr'] = $row['jumlah_pr'] ?? 0;
+                $row['mutasi_masuk'] = $row['mutasi_masuk'] ?? 0;
+                $row['mutasi_keluar'] = $row['mutasi_keluar'] ?? 0;
                 $laporan->rekap_personal()->create($row);
             }
         });
@@ -169,6 +178,10 @@ class LaporanController extends Controller
         DB::transaction(function () use ($laporan, $data) {
             $laporan->guru()->delete();
             foreach ($data as $row) {
+                $row['jabatan'] = $row['jabatan'] ?? '-';
+                $row['lp'] = $row['lp'] ?? 'L';
+                $row['jumlah_jam'] = $row['jumlah_jam'] ?? 0;
+                $row['sertifikasi'] = $row['sertifikasi'] ?? false;
                 $laporan->guru()->create($row);
             }
         });
@@ -186,6 +199,11 @@ class LaporanController extends Controller
         DB::transaction(function () use ($laporan, $data) {
             $laporan->sarpras()->delete();
             foreach ($data as $row) {
+                $row['kondisi_baik'] = $row['kondisi_baik'] ?? 0;
+                $row['kondisi_rusak_ringan'] = $row['kondisi_rusak_ringan'] ?? 0;
+                $row['kondisi_rusak_berat'] = $row['kondisi_rusak_berat'] ?? 0;
+                $row['kekurangan'] = $row['kekurangan'] ?? 0;
+                $row['perlu_rehab'] = $row['perlu_rehab'] ?? 0;
                 $laporan->sarpras()->create($row);
             }
         });
@@ -203,6 +221,11 @@ class LaporanController extends Controller
         DB::transaction(function () use ($laporan, $data) {
             $laporan->mobiler()->delete();
             foreach ($data as $row) {
+                $row['jumlah_total'] = $row['jumlah_total'] ?? 0;
+                $row['kondisi_baik'] = $row['kondisi_baik'] ?? 0;
+                $row['kondisi_rusak_ringan'] = $row['kondisi_rusak_ringan'] ?? 0;
+                $row['kondisi_rusak_berat'] = $row['kondisi_rusak_berat'] ?? 0;
+                $row['kekurangan'] = $row['kekurangan'] ?? 0;
                 $laporan->mobiler()->create($row);
             }
         });
@@ -220,6 +243,8 @@ class LaporanController extends Controller
         DB::transaction(function () use ($laporan, $data) {
             $laporan->keuangan()->delete();
             foreach ($data as $row) {
+                $row['volume'] = $row['volume'] ?? 0;
+                $row['harga_satuan'] = $row['harga_satuan'] ?? 0;
                 $laporan->keuangan()->create($row);
             }
         });
