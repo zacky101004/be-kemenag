@@ -76,6 +76,7 @@ class MasterDataController extends Controller
         
         $validated = $request->validate([
             'username' => 'required|unique:users',
+            'name' => 'nullable|string',
             'password' => 'required|min:6',
             'role' => 'required|in:operator_sekolah,kasi_penmad,staff_penmad',
             'id_madrasah' => 'required_if:role,operator_sekolah'
